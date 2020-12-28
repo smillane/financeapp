@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+
+  app:
+    build: ./finance
+    container_name: finance
+    restart: always
+    environment:
+      - APP_Name=MyFinanceApp
+    expose:
+      - 8080
+  
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"

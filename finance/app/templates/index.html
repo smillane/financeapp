@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Accounts Summary
+{% endblock %}
+
+{% block main %}
+    <form action="/" method="post">
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Total Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for stocks in portfolio %}
+                <tr>
+                    <td scope="row">{{ stocks.symbol }}</td>
+                    <td>{{ stocks.name }}</td>
+                    <td>{{ stocks.quantity }}</td>
+                    <td>{{ stocks.price }}</td>
+                    <td>{{ stocks.value }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td scope="row" colspan="4" class="text-right font-weight-bold">Cash & Cash Investments</td>
+                    <td class="font-weight-bold">{{ cash }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" colspan="4" class="text-right font-weight-bold">Balance/Value</th>
+                    <td class="font-weight-bold">{{ value }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+{% endblock %}

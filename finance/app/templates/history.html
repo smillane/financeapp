@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <form action="/" method="post">
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Transaction Type</th>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for transaction in history %}
+                <tr>
+                    <td scope="row">{{ transaction.date }}</td>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.symbol }}</td>
+                    <td>{{ transaction.quantity }}</td>
+                    <td>{{ transaction.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}

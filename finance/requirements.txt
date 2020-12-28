@@ -1,0 +1,6 @@
+cs50==6.0.2
+Flask==1.1.1
+Flask-Session==0.3.2
+uwsgi==2.0.19.1
+virtualenv==20.0.17
+requests==2.22.0
