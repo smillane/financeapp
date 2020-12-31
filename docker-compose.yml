@@ -1,19 +1,26 @@
 version: "3.8"
 
 services:
-
-  app:
-    build: ./finance
-    container_name: finance
-    restart: always
-    environment:
-      - APP_Name=MyFinanceApp
-    expose:
-      - 8080
-  
   nginx:
-    build: ./nginx
-    container_name: nginx
-    restart: always
+    image: nginx:1.19-alpine
+    depends_on:
+    - financeapp
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+  
+  financeapp:
+    image: financeapp
+    build:
+      context: .
+      dockerfile: ./Dockerfile

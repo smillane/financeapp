@@ -53,7 +53,19 @@ def lookup(symbol):
         return {
             "name": quote["companyName"],
             "price": float(quote["latestPrice"]),
-            "symbol": quote["symbol"]
+            "symbol": quote["symbol"],
+            "iexOpen": quote["iexOpen"],
+            "previousClose": quote["previousClose"],
+            "change": quote["change"],
+            "changePercent": round(quote["changePercent"], 2),
+            "iexVolume": quote["iexVolume"],
+            "week52High": quote["week52High"],
+            "week52Low": quote["week52Low"],
+            "iexBidPrice": quote["iexBidPrice"],
+            "iexBidSize": quote["iexBidSize"],
+            "iexAskPrice": quote["iexAskPrice"],
+            "iexAskSize": quote["iexAskSize"],
+            "latestTime": quote["latestTime"],
         }
     except (KeyError, TypeError, ValueError):
         return None

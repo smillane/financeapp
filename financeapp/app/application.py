@@ -10,8 +10,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.helpers import apology, login_required, lookup, usd
 
-# Configure application
-
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -73,6 +71,9 @@ def buy():
     if request.method == "POST":
 
         input_symbol = request.form.get("symbol")
+
+        input_symbol = input_symbol.upper()
+
         input_quantity = request.form.get("quantity")
 
         if not input_symbol:
@@ -143,7 +144,6 @@ def history():
             user_id = session["user_id"])
 
     if not history:
-        flash(f"You have no transactions!")
         return render_template("history.html")
 
     for transaction in history:
@@ -214,12 +214,13 @@ def logout():
     return redirect("/")
 
 
-@app.route("/quote", methods=["GET", "POST"])
+@app.route("/trade", methods=["GET", "POST"])
 @login_required
 def quote():
     if request.method == "POST":
-
         input_symbol = request.form.get("symbol")
+
+        input_symbol = input_symbol.upper()
 
         if not input_symbol:
             return apology("Enter Ticker", 400)
@@ -231,10 +232,17 @@ def quote():
 
         quote["price"] = usd(quote["price"])
 
-        return render_template("quoted.html", quote = quote)
+        portfolio = db.execute("SELECT quantity FROM portfolios WHERE user_id = :user_id AND symbol = :symbol",
+            user_id = session["user_id"],
+            symbol = input_symbol)
+
+        if not portfolio:
+            return render_template("trading.html", quote = quote)
+
+        return render_template("trading.html", quote = quote, portfolio = portfolio)
 
     else:
-        return render_template("quote.html")
+        return render_template("trade.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -279,7 +287,7 @@ def register():
                 # Remember which user has logged in
                 session["user_id"] = new_user
 
-            flash(f"Registered as (register_username)")
+            flash(f"You've registered an account!")
 
             # Redirect user to home page
             return redirect("/")
@@ -293,6 +301,9 @@ def sell():
     if request.method == "POST":
 
         input_symbol = request.form.get("symbol")
+
+        input_symbol = input_symbol.upper()
+
         input_quantity = request.form.get("quantity")
 
         if not input_symbol:
@@ -354,39 +365,6 @@ def sell():
 
     else:
         return render_template("sell.html")
-
-@app.route("/settings", methods=["GET", "POST"])
-def settings():
-    if request.method == "POST":
-
-        # Ensure username was submitted
-        username = request.form.get("username")
-        new_password = request.form.get("new_password")
-        new_password_check = request.form.get("new_password_check")
-
-        if not request.form.get("username"):
-            return apology("Must provide username", 403)
-
-        # Ensure password was submitted
-        elif not request.form.get("new_password"):
-            return apology("Must provide new password", 403)
-
-        elif not request.form.get("new_password_check"):
-            return apology("Must provide new password", 403)
-
-        elif not new_password == new_password_check:
-            return apology("Passwords must match", 403)
-
-        db.execute("UPDATE users SET hash = :password WHERE username = :username",
-        username = username, password = generate_password_hash(new_password, method="pbkdf2:sha256", salt_length=8))
-
-        flash(f"Your password has been changed!")
-
-        # Redirect user to home page
-        return redirect("/")
-
-    else:
-        return render_template("settings.html")
 
 
 def errorhandler(e):

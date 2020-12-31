@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Trading
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <div class="row border-bottom pb-2">
+            <div class="col-md-auto">
+                <div class="d-flex justify-content-start">Symbol</div>
+                <form action="/trade" method="post" class="form-inline">
+                    <div class="form-group">
+                        <input autocomplete="off" class="form-control form-control-sm" name="symbol" placeholder="{{ quote["symbol"] }}" type="text">
+                    </div>
+                <button class="btn btn-outline-primary btn-sm" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col offset-md-1 border-left">
+                <div class="container">
+                    <div class="row"><h5 class="text-uppercase">{{ quote["name"] }}</h5></div>
+                    <div class="row border-top pt-2 pb-2">
+                        <div class="col border-right col-3">
+                            <div class="row font-weight-bold pt-2">
+                                {{ quote["price"] }}
+                            </div>
+                            <div class="row">
+                                {{ quote["change"] }} / ( {{ quote["changePercent"] }}% )
+                            </div>
+                        </div>
+                        <div class="col pl-2 pb-2 pt-2">
+                            <div class="row">
+                                <div class="col-md-auto justify-content-start font-weight-light text-muted">
+                                    BidSize
+                                </div>
+                                <div class="col font-weight-bold text-primary d-flex justify-content-end">
+                                    {{ quote["iexBidPrice"] }} / {{ quote["iexBidSize"] }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-auto justify-content-start font-weight-light text-muted">
+                                    Ask/Size
+                                </div>
+                                <div class="col font-weight-bold text-primary d-flex justify-content-end">
+                                    {{ quote["iexAskPrice"] }} / {{ quote["iexAskSize"] }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-left col-md-auto pl-2 pb-2 pt-2">
+                            <div class="row">
+                                <div class="col-md-auto d-flex justify-content-start font-weight-light text-muted">
+                                    Day Range
+                                </div>
+                                <div class="col font-weight-bold d-flex justify-content-end">
+                                    {{ quote["iexOpen"] }} - {{ quote["previousClose"] }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-auto justify-content-start font-weight-light text-muted">
+                                    52 Week Range
+                                </div>
+                                <div class="col font-weight-bold d-flex justify-content-end">
+                                    {{ quote["week52Low"] }} - {{ quote["week52High"] }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row border-top pb-2 pt-2">
+                        <div class="col-md-auto border-right ml-0 pl-0">
+                            <div class="row">
+                                <div class="col-md-auto justify-content-start font-weight-light text-muted">
+                                    Today's Open
+                                </div>
+                                <div class="col font-weight-bold d-flex justify-content-end">
+                                    {{ quote["iexOpen"] }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-auto justify-content-start font-weight-light text-muted">
+                                    Previous Close
+                                </div>
+                                <div class="col font-weight-bold d-flex justify-content-end">
+                                    {{ quote["previousClose"] }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col ml-2">
+                            <div class="row font-weight-light text-muted">
+                                Volume
+                            </div>
+                            <div class="row font-weight-bold">
+                                {{ quote["iexVolume"] }}
+                            </div>
+                        </div>
+                        <div class="col align-self-end">
+                            {{ quote["latestTime"] }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <form action="/buy" method="post" class="form-inline">
+        <div class="form-group">
+            <input autocomplete="off" class="form-control form-control-sm" name="symbol" type="text" value={{ quote["symbol"] }} hidden>
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control form-control-sm" name="quantity" placeholder="Quantity to Buy" type="text">
+        </div>
+        <button class="btn btn-success btn-sm" type="submit">Buy</button>
+    </form>
+    <br>
+    <form action="/sell" method="post" class="form-inline">
+        <div class="form-group">
+            <input autocomplete="off" class="form-control form-control-sm" name="symbol" type="text" value={{ quote["symbol"] }} hidden>
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control form-control-sm" name="quantity" placeholder="Quantity to Sell" type="text">
+        </div>
+        <button class="btn btn-success btn-sm" type="submit">Sell</button>
+    </form>
+    <br>
+    <div class="d-flex justify-content-start" action="/quote" method="post">
+        {% for stocks in portfolio %}
+        <h6>You own {{ stocks.quantity }} shares of {{ quote["symbol"] }}</h6>
+        {% endfor %}
+    </div>
+{% endblock %}
