@@ -236,10 +236,13 @@ def quote():
             user_id = session["user_id"],
             symbol = input_symbol)
 
-        if not portfolio:
-            return render_template("trading.html", quote = quote)
+        cash = db.execute("SELECT cash FROM users WHERE id = :user_id",
+            user_id = session["user_id"])[0]["cash"]
 
-        return render_template("trading.html", quote = quote, portfolio = portfolio)
+        if not portfolio:
+            return render_template("trading.html", quote = quote, cash = usd(cash))
+
+        return render_template("trading.html", quote = quote, portfolio = portfolio, cash = usd(cash))
 
     else:
         return render_template("trade.html")
@@ -365,6 +368,39 @@ def sell():
 
     else:
         return render_template("sell.html")
+
+@app.route("/settings", methods=["GET", "POST"])
+def settings():
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        username = request.form.get("username")
+        new_password = request.form.get("new_password")
+        new_password_check = request.form.get("new_password_check")
+
+        if not request.form.get("username"):
+            return apology("Must provide username", 403)
+
+        # Ensure password was submitted
+        elif not request.form.get("new_password"):
+            return apology("Must provide new password", 403)
+
+        elif not request.form.get("new_password_check"):
+            return apology("Must provide new password", 403)
+
+        elif not new_password == new_password_check:
+            return apology("Passwords must match", 403)
+
+        db.execute("UPDATE users SET hash = :password WHERE username = :username",
+        username = username, password = generate_password_hash(new_password, method="pbkdf2:sha256", salt_length=8))
+
+        flash(f"Your password has been changed!")
+
+        # Redirect user to home page
+        return redirect("/")
+
+    else:
+        return render_template("settings.html")
 
 
 def errorhandler(e):

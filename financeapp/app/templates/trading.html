@@ -100,9 +100,13 @@
             </div>
         </div>
     </div>
-    <br>
-    <br>
-    <form action="/buy" method="post" class="form-inline">
+    <div class="col" action="/trade" method="post">
+        <div class="row mt-2 font-weight-light">Available to Trade:
+            <div class="font-weight-bold ml-1">{{ cash }}</div>
+        </div>
+        <div class="row font-weight-light">using Cash & Cash Investments</div>
+    </div>
+    <form action="/buy" method="post" class="form-inline  mt-2">
         <div class="form-group">
             <input autocomplete="off" class="form-control form-control-sm" name="symbol" type="text" value={{ quote["symbol"] }} hidden>
         </div>

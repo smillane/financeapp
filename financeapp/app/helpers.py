@@ -57,7 +57,7 @@ def lookup(symbol):
             "iexOpen": quote["iexOpen"],
             "previousClose": quote["previousClose"],
             "change": quote["change"],
-            "changePercent": round(quote["changePercent"], 2),
+            "changePercent": round(quote["changePercent"], 2) * 100,
             "iexVolume": quote["iexVolume"],
             "week52High": quote["week52High"],
             "week52Low": quote["week52Low"],
