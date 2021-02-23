@@ -1,3 +1,4 @@
-Basic stock trading application that uses docker, nginx, uswgi, sqlite, javascript, python, flask and sql alchemy to create a RESTful API.
+#Finance App
+> Stock trading application using a RESTful API deployed on AWS. The application tracks user's transactions, cash, and positions. Stock data is updated live through an API.
 
-Uses IEX API to pull stock values in real time.
+Built using Python, Flask, SQL Alchemy, JavaScript, SQLite, Nginx, uWSGI, Docker, and Bootstrap.
